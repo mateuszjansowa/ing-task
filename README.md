@@ -1,7 +1,4 @@
-#ING recruitment task (web-components with Lion &amp; Lit)
-
-## Intro
-Project was bootstraped with [Lit JavaScript starter](https://github.com/lit/lit-element-starter-js) based on rollup.
+# ING recruitment task (web-components with Lion &amp; Lit)
 
 ## Setup
 1. Install the dependencies using. Use node v16 +.
@@ -9,7 +6,15 @@ Project was bootstraped with [Lit JavaScript starter](https://github.com/lit/lit
 ```javascript
 npm i
 ```
-2. Run the server with the command below
+
+2. Install json-server globally to fake rest API
+
+```javascript
+npm install -g json-server
+```
+
+3. Run both the server and the json-server with the command below.
+This starts local server on port 8000 & json-server on 3000
 
 ```javascript
 npm start
