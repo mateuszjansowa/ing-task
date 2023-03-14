@@ -1,6 +1,5 @@
 import {html, LitElement} from '@lion/core'
 import {API} from '../API'
-import {loadDefaultFeedbackMessages} from '@lion/ui/validate-messages.js'
 import '@lion/ui/define/lion-button.js'
 import '@lion/ui/define/lion-button-submit.js'
 import '@lion/ui/define/lion-form.js'
@@ -41,17 +40,20 @@ export class MultiStepForm extends LitElement {
                 <lion-button-submit @click=${() => this.step++}>
                     Submit
                 </lion-button-submit>`,
+            2: html`<h1>Thanks for filling out the form!</h1>`,
         }[this.step])
 
     renderSteps = () =>
         this.fieldsFromJSON.map(
             field =>
-                html`<form-step .field=${field} .step=${this.step}></form-step>`
+                html`<form-step
+                    .field=${field}
+                    .step=${this.step}
+                    .state=${this.formState}
+                ></form-step>`
         )
 
     render() {
-        loadDefaultFeedbackMessages()
-
         return html`
             <lion-form>
                 <form>
