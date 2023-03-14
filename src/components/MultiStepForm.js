@@ -1,6 +1,6 @@
 import {html, LitElement} from '@lion/core'
-import {loadDefaultFeedbackMessages} from '@lion/ui/validate-messages.js'
 import {API} from '../API'
+import {loadDefaultFeedbackMessages} from '@lion/ui/validate-messages.js'
 import '@lion/ui/define/lion-button.js'
 import '@lion/ui/define/lion-button-submit.js'
 import '@lion/ui/define/lion-form.js'
@@ -12,21 +12,21 @@ const api = new API()
 export class MultiStepForm extends LitElement {
     static properties = {
         step: {type: Number},
-        fields: {type: Array, state: true},
+        fieldsFromJSON: {type: Array, state: true},
         formState: {type: Object, state: true},
     }
 
     constructor() {
         super()
         this.step = 0
-        this.fields = []
+        this.fieldsFromJSON = []
         this.formState = {}
     }
 
     connectedCallback() {
         super.connectedCallback()
         api.getData().then(data => {
-            this.fields = data
+            this.fieldsFromJSON = data
         })
     }
 
@@ -43,8 +43,8 @@ export class MultiStepForm extends LitElement {
                 </lion-button-submit>`,
         }[this.step])
 
-    renderFields = () =>
-        this.fields.map(
+    renderSteps = () =>
+        this.fieldsFromJSON.map(
             field =>
                 html`<form-step .field=${field} .step=${this.step}></form-step>`
         )
@@ -55,7 +55,7 @@ export class MultiStepForm extends LitElement {
         return html`
             <lion-form>
                 <form>
-                    ${this.renderFields()}
+                    ${this.renderSteps()}
                     <div>${this.renderButton()}</div>
                 </form>
             </lion-form>
