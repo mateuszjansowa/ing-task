@@ -1,48 +1,60 @@
 import {html, LitElement} from '@lion/core'
-import {Required} from '@lion/form-core'
-import '@lion/ui/define/lion-button.js'
+import {loadDefaultFeedbackMessages} from '@lion/ui/validate-messages.js'
+import {API} from '../API'
 import '@lion/ui/define/lion-form.js'
-import '@lion/input/define'
+import '@lion/ui/define/lion-input.js'
+
+const api = new API()
 
 export class MultiStepForm extends LitElement {
     static properties = {
-        step: {type: Number},
+        step: {type: Number, state: true},
+        fields: {type: Array, state: true},
         formState: {type: Object, state: true},
     }
 
     constructor() {
         super()
         this.step = 0
+        this.fields = []
         this.formState = {
-            name: '',
-            surname: '',
-            pesel: '',
+            
         }
     }
 
-    #onNameChanged = event => {
-        this.formState = {
-            ...this.formState,
-            name: event.target.value,
-        }
+    connectedCallback() {
+        super.connectedCallback()
+        api.getData().then(data => {
+            this.fields = data
+        })
     }
 
-    step1 = html`
-        <lion-input .validators=${[new Required()]} label="Name"></lion-input>
-        <lion-button @click=${() => this.step++}>Next</lion-button>
-    `
+    step1 = html` <lion-button @click=${() => this.step++}>Next</lion-button> `
+
+    step2 = html` <lion-button @click=${() => this.step--}>
+        Previous
+    </lion-button>`
 
     render() {
-        const steps = [this.step1, this.step2]
+        loadDefaultFeedbackMessages()
 
         return html`
             <lion-form>
-                <form>${steps[this.step]}</form>
+                <form>
+                    ${this.fields.map(
+                        step =>
+                            html`<form-step
+                                order=${step.order - 1}
+                                name=${step.name}
+                                .elements=${step.form}
+                                .step=${this.step}
+                                .state=${this.formState[step.name]}
+                            ></form-step>`
+                    )}
+                </form>
             </lion-form>
         `
     }
 }
 
-if (!window.customElements.get('multi-step-form')) {
-    window.customElements.define('multi-step-form', MultiStepForm)
-}
+window.customElements.define('multi-step-form', MultiStepForm)
