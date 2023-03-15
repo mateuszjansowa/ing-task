@@ -10,14 +10,16 @@ export class MultiStepForm extends LitElement {
     static properties = {
         step: {type: Number},
         fieldsFromJSON: {type: Array, state: true},
+        validationResult: {type: Array, state: true},
     }
 
     constructor() {
         super()
         localize.locale = language.en
+        this.api = new API()
         this.step = 0
         this.fieldsFromJSON = []
-        this.api = new API()
+        this.validationResult = []
     }
 
     connectedCallback() {
@@ -31,12 +33,11 @@ export class MultiStepForm extends LitElement {
 
     #previousStep = () => this.step--
 
-    renderButton = () => {
+    #renderButton = () => {
         const buttons = {
             0: html`<lion-button @click=${this.#nextStep}> Next </lion-button>`,
             1: html`<lion-button @click=${this.#previousStep}> Previous </lion-button>
                 <lion-button-submit> Submit </lion-button-submit>`,
-            2: html`<h1>Thanks for filling out the form!</h1>`,
         }
 
         if (Object.hasOwn(buttons, this.step)) {
@@ -44,33 +45,68 @@ export class MultiStepForm extends LitElement {
         }
     }
 
+    #getElementsWithError = elements => elements.filter(el => el.hasFeedbackFor.includes('error'))
+
     #onSubmit = e => {
         e.preventDefault()
+        this.validationResult = []
         const formSteps = this.shadowRoot.querySelectorAll('form-step')
 
-        if (formSteps && formSteps.length > 0) {
-            for (const formStep of formSteps) {
-                formStep.lionForm.submit()
-                // todo error detection
-                if (formStep.lionForm.hasFeedbackFor.includes('error')) {
-                    console.log('error')
-                }
-            }
+        if (!formSteps || !formSteps.length) {
+            return
         }
+
+        formSteps.forEach((formStep, index) => {
+            formStep.lionForm.submit()
+
+            const elementsWithError = this.#getElementsWithError(formStep.lionForm.formElements)
+
+            if (!elementsWithError.length) {
+                return
+            }
+
+            this.validationResult = [
+                ...this.validationResult,
+                [...elementsWithError].map(el => ({
+                    name: el.name,
+                    step: index + 1,
+                })),
+            ]
+        })
     }
 
-    renderFormSteps = () =>
+    #renderFormSteps = () =>
         this.fieldsFromJSON.map(
             field => html` <form-step .field=${field} .step=${this.step}></form-step>`
         )
 
+    #renderValidationResult = () => {
+        if (!this.validationResult.length) {
+            return
+        }
+
+        return html`
+            <ul>
+                ${this.validationResult.map(
+                    result =>
+                        html`
+                            <p>step ${result[0].step}</p>
+                            ${result.map(el => html`<li>${el.name}</li>`)}
+                        `
+                )}
+            </ul>
+        `
+    }
+
     render() {
         loadDefaultFeedbackMessages()
+        console.log(this.validationResult)
 
         return html`
             <form @submit=${this.#onSubmit}>
-                ${this.renderFormSteps()}
-                <div>${this.renderButton()}</div>
+                ${this.#renderFormSteps()}
+                <div>${this.#renderButton()}</div>
+                <div>${this.#renderValidationResult()}</div>
             </form>
         `
     }
