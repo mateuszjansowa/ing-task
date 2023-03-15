@@ -12,15 +12,23 @@ export default class FormStep extends LitElement {
         state: {type: Object, state: true},
     }
 
+    constructor() {
+        super()
+        this.state = {}
+    }
+
     connectedCallback() {
         super.connectedCallback()
         this.form = formConverter(this.field.form)
-        this.stepState = {}
     }
 
-    onChange = e => {
+    #onChange = e => {
         const {name, value} = e.target
         this.state = {...this.state, [name]: value}
+    }
+
+    get lionForm() {
+        return this.shadowRoot.querySelector('lion-form')
     }
 
     render() {
@@ -39,7 +47,7 @@ export default class FormStep extends LitElement {
                                 name=${field.label}
                                 label=${field.label}
                                 .validators="${field.validators}"
-                                @model-value-changed=${this.onChange}
+                                @model-value-changed=${this.#onChange}
                                 ?hidden=${isHidden(field, this.state)}
                             ></lion-input>`
                         }
@@ -48,7 +56,7 @@ export default class FormStep extends LitElement {
                                 name=${field.label}
                                 label=${field.label}
                                 .validators="${field.validators}"
-                                @model-value-changed=${this.onChange}
+                                @model-value-changed=${this.#onChange}
                                 ?hidden=${isHidden(field, this.state)}
                             >
                                 <select slot="input">
