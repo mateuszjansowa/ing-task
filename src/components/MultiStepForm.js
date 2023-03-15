@@ -47,9 +47,28 @@ export class MultiStepForm extends LitElement {
 
     #getElementsWithError = elements => elements.filter(el => el.hasFeedbackFor.includes('error'))
 
+    #validateFormStep = (formStep, index) => {
+        const elementsWithError = this.#getElementsWithError(formStep.lionForm.formElements)
+
+        if (!elementsWithError.length) {
+            return
+        }
+
+        return [...elementsWithError].map(el => ({
+            label: el.label,
+            step: index + 1,
+        }))
+    }
+
+    #sendDataToServer = formState => {
+        console.log(formState)
+    }
+
     #onSubmit = e => {
         e.preventDefault()
         this.validationResult = []
+        const formState = []
+
         const formSteps = this.shadowRoot.querySelectorAll('form-step')
 
         if (!formSteps || !formSteps.length) {
@@ -58,21 +77,17 @@ export class MultiStepForm extends LitElement {
 
         formSteps.forEach((formStep, index) => {
             formStep.lionForm.submit()
-
-            const elementsWithError = this.#getElementsWithError(formStep.lionForm.formElements)
-
-            if (!elementsWithError.length) {
-                return
-            }
+            formState.push(formStep.state)
 
             this.validationResult = [
                 ...this.validationResult,
-                [...elementsWithError].map(el => ({
-                    label: el.label,
-                    step: index + 1,
-                })),
-            ]
+                this.#validateFormStep(formStep, index),
+            ].filter(Boolean)
         })
+
+        if (!this.validationResult.length) {
+            this.#sendDataToServer(formState)
+        }
     }
 
     #renderFormSteps = () =>
@@ -89,6 +104,7 @@ export class MultiStepForm extends LitElement {
             <ul>
                 ${this.validationResult.map(
                     result =>
+                        result &&
                         html`
                             <p>step ${result[0].step}</p>
                             ${result.map(el => html`<li>${el.label}</li>`)}
