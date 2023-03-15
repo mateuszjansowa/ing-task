@@ -7,7 +7,7 @@
     "module": "my-element.js",
     "type": "module",
     "scripts": {
-        "start": "concurrently --kill-others \"json-server --watch db/db.json\" \"wds --watch\"",
+        "start": "concurrently --kill-others \"json-server --watch db/db.json --id order\" \"wds --watch\"",
         "lint": "start npm run lint:lit-analyzer && start npm run lint:eslint",
         "lint:eslint": "eslint '**/*.js'",
         "lint:lit-analyzer": "lit-analyzer my-element.js",

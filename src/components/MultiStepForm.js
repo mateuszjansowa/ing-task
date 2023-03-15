@@ -61,7 +61,15 @@ export class MultiStepForm extends LitElement {
     }
 
     #sendDataToServer = formState => {
-        console.log(formState)
+        const state = formState.reduce((acc, curr) => ({...acc, ...curr}), {})
+        this.api
+            .postData(state)
+            .then(response => {
+                console.log(response)
+            })
+            .catch(error => {
+                console.log(error)
+            })
     }
 
     #onSubmit = e => {
@@ -82,12 +90,14 @@ export class MultiStepForm extends LitElement {
             this.validationResult = [
                 ...this.validationResult,
                 this.#validateFormStep(formStep, index),
-            ].filter(Boolean)
+            ].filter(v => v)
         })
 
-        if (!this.validationResult.length) {
-            this.#sendDataToServer(formState)
+        if (this.validationResult.length) {
+            return
         }
+
+        this.#sendDataToServer(formState)
     }
 
     #renderFormSteps = () =>
