@@ -20,4 +20,6 @@ export const getLionValidator = (rule = '', options = 0) => {
     if (rule in validators) {
         return validators[rule]
     }
+
+    throw new Error('No validator found')
 }

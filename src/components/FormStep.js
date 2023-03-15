@@ -27,7 +27,11 @@ export default class FormStep extends LitElement {
     }
 
     get lionForm() {
-        return this.shadowRoot.querySelector('lion-form')
+        if (this.shadowRoot.querySelector('lion-form')) {
+            return this.shadowRoot.querySelector('lion-form').formElements
+        }
+
+        throw new Error('No lion-form found in shadowRoot')
     }
 
     render() {
