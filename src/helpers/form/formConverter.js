@@ -1,5 +1,5 @@
 import {getLionValidator} from './getLionValidator'
-import {normalizeString} from '../utils'
+import {trimString, toTitleCase} from '../utils'
 
 export const formConverter = (form = {}) => {
     return Object.entries(form).reduce((acc, [label, options]) => {
@@ -7,13 +7,10 @@ export const formConverter = (form = {}) => {
             options.validators = options.validators.map(validatorConfig => {
                 const [validationRule = '', validationOptions = ''] = validatorConfig.split(':')
 
-                return getLionValidator(
-                    normalizeString(validationRule),
-                    normalizeString(validationOptions)
-                )
+                return getLionValidator(trimString(validationRule), trimString(validationOptions))
             })
         }
 
-        return [...acc, {...options, label}]
+        return [...acc, {...options, label: toTitleCase(label)}]
     }, [])
 }
