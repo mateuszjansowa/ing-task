@@ -1,5 +1,4 @@
 import {getLionValidator} from './getLionValidator'
-import {getVisibility} from './getVisibility'
 import {normalizeString} from '../utils'
 
 export const formConverter = (form = {}) => {
@@ -13,15 +12,6 @@ export const formConverter = (form = {}) => {
                     normalizeString(validationOptions)
                 )
             })
-        }
-
-        if ('visibility' in options) {
-            const [visibilityRule = '', visibilityOptions = ''] = options.visibility.split('===')
-
-            options.visibility = getVisibility(
-                normalizeString(visibilityRule),
-                normalizeString(visibilityOptions)
-            )
         }
 
         return [...acc, {...options, label}]
