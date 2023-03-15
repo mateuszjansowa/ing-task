@@ -5,12 +5,15 @@ import '@lion/ui/define/lion-button-submit.js'
 import {localize} from '@lion/ui/localize.js'
 import {language} from '../constants'
 import {loadDefaultFeedbackMessages} from '@lion/ui/validate-messages.js'
+import {messages} from '../constants'
 
 export class MultiStepForm extends LitElement {
     static properties = {
         step: {type: Number},
         fieldsFromJSON: {type: Array, state: true},
         validationResult: {type: Array, state: true},
+        formSendStatus: {type: Object},
+        showLoader: {type: Boolean},
     }
 
     constructor() {
@@ -20,6 +23,11 @@ export class MultiStepForm extends LitElement {
         this.step = 0
         this.fieldsFromJSON = []
         this.validationResult = []
+        this.formSendStatus = {
+            status: '',
+            message: '',
+        }
+        this.showLoader = false
     }
 
     connectedCallback() {
@@ -62,13 +70,20 @@ export class MultiStepForm extends LitElement {
 
     #sendDataToServer = formState => {
         const state = formState.reduce((acc, curr) => ({...acc, ...curr}), {})
+
         this.api
             .postData(state)
-            .then(response => {
-                console.log(response)
+            .then(() => {
+                this.formSendStatus = {
+                    status: 'success',
+                    message: messages.success,
+                }
             })
-            .catch(error => {
-                console.log(error)
+            .catch(() => {
+                this.formSendStatus = {
+                    status: 'error',
+                    message: messages.error,
+                }
             })
     }
 
@@ -133,6 +148,10 @@ export class MultiStepForm extends LitElement {
                 <div>${this.#renderButton()}</div>
                 <div>${this.#renderValidationResult()}</div>
             </form>
+            <status-box
+                .status=${this.formSendStatus.status}
+                .message=${this.formSendStatus.message}
+            ></status-box>
         `
     }
 }
