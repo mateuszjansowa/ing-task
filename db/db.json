@@ -51,13 +51,13 @@
                     "validators": [
                         "required",
                         "min-number:0",
-                        "min-number:999"
+                        "max-number:999"
                     ],
                     "visibility": "always"
                 },
                 "apartmentNumber": {
                     "type": "number",
-                    "validators": ["min-number:0", "min-number:999"],
+                    "validators": ["min-number:0", "max-number:999"],
                     "visibility": "always"
                 }
             }
