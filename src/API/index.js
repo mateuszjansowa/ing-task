@@ -1,9 +1,5 @@
 export class API {
-    #url
-
-    constructor() {
-        this.#url = 'http://localhost:3000/simple-form'
-    }
+    #url = 'http://localhost:3000/simple-form'
 
     async getData() {
         try {
