@@ -36,21 +36,23 @@ export default class FormStep extends LitElement {
     }
 
     render() {
-        const {name} = this.field
-        console.log(this.field.order - 1 === this.step && this.form)
+        const isCurrentStep = this.field.order - 1 === this.step
 
-        return html`<div ?hidden=${this.field.order - 1 !== this.step}>
+        return html`<div ?hidden=${!isCurrentStep}>
             <lion-form>
-                <h1>${name}</h1>
+                <h1>${this.field.name}</h1>
                 <form>
                     ${this.form.map(field => {
+                        if (isHidden(field, this.state)) {
+                            return
+                        }
+
                         if (['text'].includes(field.type)) {
                             return html`<lion-input
                                 name=${field.label}
                                 label=${field.label}
                                 .validators="${field.validators}"
                                 @model-value-changed=${this.#onChange}
-                                ?hidden=${isHidden(field, this.state)}
                             ></lion-input>`
                         }
 

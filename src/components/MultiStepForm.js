@@ -50,6 +50,7 @@ export class MultiStepForm extends LitElement {
 
         if (formSteps && formSteps.length > 0) {
             for (const formStep of formSteps) {
+                formStep.lionForm.submit()
                 // todo error detection
                 if (formStep.lionForm.hasFeedbackFor.includes('error')) {
                     console.log('error')
