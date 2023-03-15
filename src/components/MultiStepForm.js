@@ -68,7 +68,7 @@ export class MultiStepForm extends LitElement {
             this.validationResult = [
                 ...this.validationResult,
                 [...elementsWithError].map(el => ({
-                    name: el.name,
+                    label: el.label,
                     step: index + 1,
                 })),
             ]
@@ -91,7 +91,7 @@ export class MultiStepForm extends LitElement {
                     result =>
                         html`
                             <p>step ${result[0].step}</p>
-                            ${result.map(el => html`<li>${el.name}</li>`)}
+                            ${result.map(el => html`<li>${el.label}</li>`)}
                         `
                 )}
             </ul>
@@ -100,7 +100,6 @@ export class MultiStepForm extends LitElement {
 
     render() {
         loadDefaultFeedbackMessages()
-        console.log(this.validationResult)
 
         return html`
             <form @submit=${this.#onSubmit}>

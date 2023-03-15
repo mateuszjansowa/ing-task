@@ -49,7 +49,7 @@ export default class FormStep extends LitElement {
 
                         if (['text'].includes(field.type)) {
                             return html`<lion-input
-                                name=${field.label}
+                                name=${field.id}
                                 label=${field.label}
                                 .validators="${field.validators}"
                                 @model-value-changed=${this.#onChange}
@@ -58,7 +58,7 @@ export default class FormStep extends LitElement {
 
                         if (['select'].includes(field.type)) {
                             return html`<lion-select
-                                name=${field.label}
+                                name=${field.id}
                                 label=${field.label}
                                 .validators="${field.validators}"
                                 @model-value-changed=${this.#onChange}
@@ -75,7 +75,7 @@ export default class FormStep extends LitElement {
 
                         if (['number'].includes(field.type)) {
                             return html`<lion-input-amount
-                                name=${field.label}
+                                name=${field.id}
                                 label=${field.label}
                                 .validators="${field.validators}"
                                 @model-value-changed=${this.#onChange}
