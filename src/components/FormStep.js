@@ -1,6 +1,5 @@
 import {LitElement, html} from '@lion/core'
 import {formConverter, isHidden} from '../helpers'
-import {loadDefaultFeedbackMessages} from '@lion/ui/validate-messages.js'
 import '@lion/ui/define/lion-input.js'
 import '@lion/ui/define/lion-select.js'
 import '@lion/ui/define/lion-form.js'
@@ -34,7 +33,6 @@ export default class FormStep extends LitElement {
     render() {
         const {name} = this.field
         console.log(this.field.order - 1 === this.step && this.form)
-        loadDefaultFeedbackMessages()
 
         return html`<div ?hidden=${this.field.order - 1 !== this.step}>
             <lion-form>

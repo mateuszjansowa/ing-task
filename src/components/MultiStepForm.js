@@ -2,6 +2,9 @@ import {html, LitElement} from '@lion/core'
 import {API} from '../API'
 import '@lion/ui/define/lion-button.js'
 import '@lion/ui/define/lion-button-submit.js'
+import {localize} from '@lion/ui/localize.js'
+import {language} from '../constants'
+import {loadDefaultFeedbackMessages} from '@lion/ui/validate-messages.js'
 
 export class MultiStepForm extends LitElement {
     static properties = {
@@ -11,6 +14,7 @@ export class MultiStepForm extends LitElement {
 
     constructor() {
         super()
+        localize.locale = language.en
         this.step = 0
         this.fieldsFromJSON = []
         this.api = new API()
@@ -23,11 +27,15 @@ export class MultiStepForm extends LitElement {
         })
     }
 
+    #nextStep = () => this.step++
+
+    #previousStep = () => this.step--
+
     renderButton = () => {
         const buttons = {
-            0: html`<lion-button @click=${() => this.step++}> Next </lion-button>`,
-            1: html`<lion-button @click=${() => this.step--}> Previous </lion-button>
-                <lion-button-submit @click=${this.submitViaJS}> Submit </lion-button-submit>`,
+            0: html`<lion-button @click=${this.#nextStep}> Next </lion-button>`,
+            1: html`<lion-button @click=${this.#previousStep}> Previous </lion-button>
+                <lion-button-submit> Submit </lion-button-submit>`,
             2: html`<h1>Thanks for filling out the form!</h1>`,
         }
 
@@ -36,21 +44,7 @@ export class MultiStepForm extends LitElement {
         }
     }
 
-    renderFormSteps = () =>
-        this.fieldsFromJSON.map(
-            field => html` <form-step .field=${field} .step=${this.step}></form-step>`
-        )
-
-    render() {
-        return html`
-            <form @submit=${this.onSubmit}>
-                ${this.renderFormSteps()}
-                <div>${this.renderButton()}</div>
-            </form>
-        `
-    }
-
-    onSubmit = e => {
+    #onSubmit = e => {
         e.preventDefault()
         const formSteps = this.shadowRoot.querySelectorAll('form-step')
 
@@ -62,6 +56,22 @@ export class MultiStepForm extends LitElement {
                 }
             }
         }
+    }
+
+    renderFormSteps = () =>
+        this.fieldsFromJSON.map(
+            field => html` <form-step .field=${field} .step=${this.step}></form-step>`
+        )
+
+    render() {
+        loadDefaultFeedbackMessages()
+
+        return html`
+            <form @submit=${this.#onSubmit}>
+                ${this.renderFormSteps()}
+                <div>${this.renderButton()}</div>
+            </form>
+        `
     }
 }
 
