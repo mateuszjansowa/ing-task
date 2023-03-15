@@ -1,7 +1,8 @@
-export const isHidden = (field = {}) => {
+export const isHidden = (field = {}, state = {}) => {
     if (!field.visibility) {
         return false
     }
 
-    return false
+    const [key, value] = field.visibility.split(' === ')
+    return state[key] !== value
 }

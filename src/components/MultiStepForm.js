@@ -2,9 +2,6 @@ import {html, LitElement} from '@lion/core'
 import {API} from '../API'
 import '@lion/ui/define/lion-button.js'
 import '@lion/ui/define/lion-button-submit.js'
-import '@lion/ui/define/lion-form.js'
-import '@lion/ui/define/lion-input.js'
-import '@lion/ui/define/lion-steps.js'
 
 const api = new API()
 
@@ -42,12 +39,10 @@ export class MultiStepForm extends LitElement {
 
     render() {
         return html`
-            <lion-form @submit=${this.onSubmit}>
-                <form>
-                    ${this.renderSteps()}
-                    <div>${this.renderButton()}</div>
-                </form>
-            </lion-form>
+            <form @submit=${this.onSubmit}>
+                ${this.renderSteps()}
+                <div>${this.renderButton()}</div>
+            </form>
         `
     }
 
@@ -57,6 +52,12 @@ export class MultiStepForm extends LitElement {
         const formSteps = this.shadowRoot.querySelectorAll('form-step')
         if (formSteps && formSteps.length > 0) {
             for (const formStep of formSteps) {
+                const lionFormStep = formStep.shadowRoot.querySelector('lion-form')
+                // this is how you detect error in a given step
+                // TODO error detecion
+                if (lionFormStep.hasFeedbackFor.includes('error')) {
+                    console.log('error')
+                }
                 const stepFormData = new FormData(formStep.shadowRoot.querySelector('form'))
                 for (const [key, value] of stepFormData.entries()) {
                     formData.append(key, value)
@@ -64,9 +65,9 @@ export class MultiStepForm extends LitElement {
             }
         }
 
-        for (const [key, value] of formData.entries()) {
+        /*  for (const [key, value] of formData.entries()) {
             console.log(key, value)
-        }
+        } */
     }
 }
 
