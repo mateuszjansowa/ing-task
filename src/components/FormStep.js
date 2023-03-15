@@ -3,6 +3,7 @@ import {formConverter, isHidden} from '../helpers'
 import '@lion/ui/define/lion-input.js'
 import '@lion/ui/define/lion-select.js'
 import '@lion/ui/define/lion-form.js'
+import '@lion/ui/define/lion-input-amount.js'
 
 export default class FormStep extends LitElement {
     static properties = {
@@ -28,7 +29,7 @@ export default class FormStep extends LitElement {
 
     get lionForm() {
         if (this.shadowRoot.querySelector('lion-form')) {
-            return this.shadowRoot.querySelector('lion-form').formElements
+            return this.shadowRoot.querySelector('lion-form')
         }
 
         throw new Error('No lion-form found in shadowRoot')
@@ -43,9 +44,8 @@ export default class FormStep extends LitElement {
                 <h1>${name}</h1>
                 <form>
                     ${this.form.map(field => {
-                        if (['text', 'number'].includes(field.type)) {
+                        if (['text'].includes(field.type)) {
                             return html`<lion-input
-                                type=${field.type}
                                 name=${field.label}
                                 label=${field.label}
                                 .validators="${field.validators}"
@@ -53,7 +53,8 @@ export default class FormStep extends LitElement {
                                 ?hidden=${isHidden(field, this.state)}
                             ></lion-input>`
                         }
-                        if (field.type === 'select') {
+
+                        if (['select'].includes(field.type)) {
                             return html`<lion-select
                                 name=${field.label}
                                 label=${field.label}
@@ -68,6 +69,17 @@ export default class FormStep extends LitElement {
                                     })}
                                 </select>
                             </lion-select>`
+                        }
+
+                        if (['number'].includes(field.type)) {
+                            return html`<lion-input-amount
+                                name=${field.label}
+                                label=${field.label}
+                                .validators="${field.validators}"
+                                @model-value-changed=${this.#onChange}
+                                ?hidden=${isHidden(field, this.state)}
+                            >
+                            </lion-input-amount>`
                         }
                     })}
                 </form>
