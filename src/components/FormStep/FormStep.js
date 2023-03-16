@@ -65,6 +65,10 @@ export default class FormStep extends LitElement {
             </lion-select>`,
 
             number: html`<lion-input-amount
+                .formatOptions=${{
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 0,
+                }}
                 class="form__field form__field--amount"
                 name=${field.id}
                 label=${field.label}
