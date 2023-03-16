@@ -5,9 +5,15 @@ export const language = {
     en: 'en-GB',
 }
 
-export const messages = {
-    success: 'Form has been submitted, thank you!',
-    error: 'Something went wrong, please try again later',
+export const serverState = {
+    success: {
+        status: 'success',
+        message: 'Form has been submitted, thank you!',
+    },
+    error: {
+        status: 'error',
+        message: 'Something went wrong, please try again later.',
+    },
 }
 
 export const colors = {

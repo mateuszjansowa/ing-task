@@ -5,7 +5,7 @@ import '@lion/ui/define/lion-button-submit.js'
 import {localize} from '@lion/ui/localize.js'
 import {language} from '../constants'
 import {loadDefaultFeedbackMessages} from '@lion/ui/validate-messages.js'
-import {messages, colors} from '../constants'
+import {serverState, colors} from '../constants'
 
 export class MultiStepForm extends LitElement {
     static styles = css`
@@ -32,6 +32,13 @@ export class MultiStepForm extends LitElement {
             transition: all 0.2s ease-in-out;
             background-color: ${colors.primary};
             color: white;
+        }
+
+        .button:disabled {
+            cursor: not-allowed;
+            background-color: ${colors.secondary};
+            border-color: ${colors.secondary};
+            color: ${colors.font};
         }
 
         .button:hover {
@@ -88,7 +95,12 @@ export class MultiStepForm extends LitElement {
             1: html`<lion-button class="button button__prev" @click=${this.#previousStep}>
                     Previous
                 </lion-button>
-                <lion-button-submit class="button"> Submit </lion-button-submit>`,
+                <lion-button-submit
+                    class="button"
+                    ?disabled=${this.formSendStatus.status === serverState.success.status}
+                >
+                    Submit
+                </lion-button-submit>`,
         }
 
         if (Object.hasOwn(buttons, this.step)) {
@@ -118,14 +130,14 @@ export class MultiStepForm extends LitElement {
             .postData(state)
             .then(() => {
                 this.formSendStatus = {
-                    status: 'success',
-                    message: messages.success,
+                    status: serverState.success.status,
+                    message: serverState.success.message,
                 }
             })
             .catch(() => {
                 this.formSendStatus = {
-                    status: 'error',
-                    message: messages.error,
+                    status: serverState.error.status,
+                    message: serverState.error.message,
                 }
             })
     }

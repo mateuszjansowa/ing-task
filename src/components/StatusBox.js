@@ -6,7 +6,6 @@ export class StatusBox extends LitElement {
         message: {type: String},
     }
 
-    static styles = css``
 
     render() {
         return html`
