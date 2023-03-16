@@ -78,6 +78,18 @@ export default class FormStep extends LitElement {
             </lion-input-amount>`,
         }
 
+        /*
+        Typy pól, które powinien generować formularz to:
+             text
+             number
+             textarea
+             select
+             checkbox
+             radio-group
+
+        Nie stworzyłem inptów dla textarea, checkbox i radio-group gdyż nie było ich w przykładowym JSONie. Mimo to myślę, że przy obecnej strukturze projektu nie byłoby żadnego problemu z ich dodaniem.
+        */
+
         if (!(field.type in availableFields)) {
             throw new Error(`Field type ${field.type} is not supported`)
         }
