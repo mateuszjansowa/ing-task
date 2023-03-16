@@ -132,25 +132,6 @@ export class MultiStepForm extends LitElement {
             field => html` <form-step .field=${field} .step=${this.step}></form-step>`
         )
 
-    #renderValidationResult = () => {
-        if (!this.validationResult.length) {
-            return
-        }
-
-        return html`
-            <ul>
-                ${this.validationResult.map(
-                    result =>
-                        result &&
-                        html`
-                            <p>step ${result[0].step}</p>
-                            ${result.map(el => html`<li>${el.label}</li>`)}
-                        `
-                )}
-            </ul>
-        `
-    }
-
     render() {
         loadDefaultFeedbackMessages()
 
@@ -161,7 +142,10 @@ export class MultiStepForm extends LitElement {
                       ${this.#renderFormSteps()}
                       <div class="buttons">${this.#renderButton()}</div>
                   </form>
-                  <div>${this.#renderValidationResult()}</div>
+
+                  <form-validation-result
+                      .results=${this.validationResult}
+                  ></form-validation-result>
                   <status-box .formSendStatus=${this.formSendStatus}></status-box>
               `
     }

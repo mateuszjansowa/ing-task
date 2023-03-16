@@ -14,8 +14,7 @@ export default css`
         position: absolute;
         width: 64px;
         height: 64px;
-        margin: 8px;
-        border: 8px solid ${colors.primary};
+        border: 4px solid ${colors.primary};
         border-radius: 50%;
         animation: loader 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
         border-color: ${colors.primary} transparent transparent transparent;
