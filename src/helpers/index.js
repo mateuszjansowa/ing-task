@@ -1,4 +1,4 @@
-import {formConverter} from './form/formConverter'
+import {prepareForm} from './form/prepareForm'
 import {isHidden} from './form/isHidden'
 
-export {formConverter, isHidden}
+export {prepareForm, isHidden}

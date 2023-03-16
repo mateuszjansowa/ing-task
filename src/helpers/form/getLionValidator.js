@@ -7,19 +7,19 @@ import {
     MaxNumber,
 } from '@lion/ui/form-core.js'
 
-export const getLionValidator = (rule = '', options = 0) => {
+export const getLionValidator = (rule = '', range = 0) => {
     const validators = {
         required: new Required(),
-        'min-len': new MinLength(+options),
-        'max-len': new MaxLength(+options),
-        len: new EqualsLength(+options),
-        'min-number': new MinNumber(+options),
-        'max-number': new MaxNumber(+options),
+        'min-len': new MinLength(+range),
+        'max-len': new MaxLength(+range),
+        len: new EqualsLength(+range),
+        'min-number': new MinNumber(+range),
+        'max-number': new MaxNumber(+range),
     }
 
-    if (rule in validators) {
-        return validators[rule]
+    if (!(rule in validators)) {
+        throw new Error('No validator found')
     }
 
-    throw new Error('No validator found')
+    return validators[rule]
 }

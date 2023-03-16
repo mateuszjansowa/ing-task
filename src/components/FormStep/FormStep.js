@@ -1,5 +1,5 @@
 import {LitElement, html} from '@lion/core'
-import {formConverter, isHidden} from '../../helpers'
+import {prepareForm, isHidden} from '../../helpers'
 import {toTitleCase} from '../../helpers/utils'
 import '@lion/ui/define/lion-input.js'
 import '@lion/ui/define/lion-select.js'
@@ -22,7 +22,7 @@ export default class FormStep extends LitElement {
 
     connectedCallback() {
         super.connectedCallback()
-        this.form = formConverter(this.field.form)
+        this.form = prepareForm(this.field.form)
     }
 
     #onChange = e => {
