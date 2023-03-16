@@ -1,0 +1,7 @@
+body {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 16px;
+    display: grid;
+    place-content: center;
+    color: hsl(0, 0%, 40%);
+}

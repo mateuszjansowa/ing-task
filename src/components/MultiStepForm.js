@@ -1,13 +1,51 @@
-import {html, LitElement} from '@lion/core'
+import {html, LitElement, css} from '@lion/core'
 import {API} from '../API'
 import '@lion/ui/define/lion-button.js'
 import '@lion/ui/define/lion-button-submit.js'
 import {localize} from '@lion/ui/localize.js'
 import {language} from '../constants'
 import {loadDefaultFeedbackMessages} from '@lion/ui/validate-messages.js'
-import {messages} from '../constants'
+import {messages, colors} from '../constants'
 
 export class MultiStepForm extends LitElement {
+    static styles = css`
+        .form {
+            display: flex;
+            flex-direction: column;
+            flex-wrap: nowrap;
+            min-width: 600px;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: flex-end;
+            column-gap: 20px;
+            margin-top: 20px;
+        }
+
+        .button {
+            padding: 10px 20px;
+            border-radius: 2px;
+            border: 1px solid ${colors.primary};
+            box-shadow: 0px 1px 2px -1px ${colors.secondary};
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            background-color: ${colors.primary};
+            color: white;
+        }
+
+        .button:hover {
+            color: ${colors.font};
+            background-color: transparent;
+        }
+
+        .button__prev {
+            border: 0;
+            background-color: transparent;
+            color: ${colors.primary};
+            box-shadow: none;
+        }
+    `
     static properties = {
         step: {type: Number},
         fieldsFromJSON: {type: Array, state: true},
@@ -43,9 +81,11 @@ export class MultiStepForm extends LitElement {
 
     #renderButton = () => {
         const buttons = {
-            0: html`<lion-button @click=${this.#nextStep}> Next </lion-button>`,
-            1: html`<lion-button @click=${this.#previousStep}> Previous </lion-button>
-                <lion-button-submit> Submit </lion-button-submit>`,
+            0: html`<lion-button class="button" @click=${this.#nextStep}> Next </lion-button>`,
+            1: html`<lion-button class="button button__prev" @click=${this.#previousStep}>
+                    Previous
+                </lion-button>
+                <lion-button-submit class="button"> Submit </lion-button-submit>`,
         }
 
         if (Object.hasOwn(buttons, this.step)) {
@@ -143,11 +183,11 @@ export class MultiStepForm extends LitElement {
         loadDefaultFeedbackMessages()
 
         return html`
-            <form @submit=${this.#onSubmit}>
+            <form @submit=${this.#onSubmit} class="form">
                 ${this.#renderFormSteps()}
-                <div>${this.#renderButton()}</div>
-                <div>${this.#renderValidationResult()}</div>
+                <div class="buttons">${this.#renderButton()}</div>
             </form>
+            <div>${this.#renderValidationResult()}</div>
             <status-box
                 .status=${this.formSendStatus.status}
                 .message=${this.formSendStatus.message}

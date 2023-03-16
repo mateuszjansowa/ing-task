@@ -1,11 +1,74 @@
-import {LitElement, html} from '@lion/core'
+import {LitElement, html, css} from '@lion/core'
 import {formConverter, isHidden} from '../helpers'
 import '@lion/ui/define/lion-input.js'
 import '@lion/ui/define/lion-select.js'
 import '@lion/ui/define/lion-form.js'
 import '@lion/ui/define/lion-input-amount.js'
+import {colors} from '../constants'
 
 export default class FormStep extends LitElement {
+    static styles = css`
+        .form__header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            flex-direction: column;
+            margin: 20px 0;
+        }
+
+        .form__title {
+            font-weight: 400;
+            color: hsl(0, 0%, 0%);
+            margin: 10px;
+            padding: 0;
+            text-transform: uppercase;
+        }
+
+        .form__subtitle {
+            margin: 5px;
+            padding: 0;
+        }
+
+        .form__fields {
+            border: 1px solid hsl(0, 0%, 80%);
+            border-radius: 5px;
+            padding: 40px;
+            box-shadow: 0px 1px 2px -1px hsl(0, 0%, 49%);
+            display: flex;
+            flex-direction: column;
+            row-gap: 40px;
+        }
+
+        .form__field {
+            display: grid;
+            grid-template-columns: 35% auto;
+            align-items: center;
+            position: relative;
+        }
+
+        .form__field input,
+        .form__field select {
+            padding: 10px 5px;
+            border-radius: 5px;
+            background-color: transparent;
+            border: 0;
+            outline: 1px solid ${colors.secondary};
+        }
+
+        .form__field input:focus-visible,
+        .form__field select:focus-visible {
+            border: 0;
+            outline: 1px solid ${colors.primary};
+        }
+
+        lion-validation-feedback {
+            position: absolute;
+            font-size: 0.9rem;
+            color: ${colors.danger};
+            padding-top: 5px;
+        }
+    `
     static properties = {
         form: {type: Array},
         step: {type: Number},
@@ -40,8 +103,11 @@ export default class FormStep extends LitElement {
 
         return html`<div ?hidden=${!isCurrentStep}>
             <lion-form>
-                <h1>${this.field.name}</h1>
-                <form>
+                <div class="form__header">
+                    <h1 class="form__title">${this.field.name}</h1>
+                    <h5 class="form__subtitle">Fill out the form to register your account</h5>
+                </div>
+                <form class="form__fields">
                     ${this.form.map(field => {
                         if (isHidden(field, this.state)) {
                             return
@@ -49,6 +115,7 @@ export default class FormStep extends LitElement {
 
                         if (['text'].includes(field.type)) {
                             return html`<lion-input
+                                class="form__field"
                                 name=${field.id}
                                 label=${field.label}
                                 .validators="${field.validators}"
@@ -58,6 +125,7 @@ export default class FormStep extends LitElement {
 
                         if (['select'].includes(field.type)) {
                             return html`<lion-select
+                                class="form__field"
                                 name=${field.id}
                                 label=${field.label}
                                 .validators="${field.validators}"
@@ -74,6 +142,7 @@ export default class FormStep extends LitElement {
 
                         if (['number'].includes(field.type)) {
                             return html`<lion-input-amount
+                                class="form__field form__field--amount"
                                 name=${field.id}
                                 label=${field.label}
                                 .validators="${field.validators}"
