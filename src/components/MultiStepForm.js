@@ -65,14 +65,17 @@ export class MultiStepForm extends LitElement {
             status: '',
             message: '',
         }
-        this.showLoader = false
+        this.showLoader = true
     }
 
     connectedCallback() {
         super.connectedCallback()
-        this.api.getData().then(data => {
-            this.fieldsFromJSON = data
-        })
+        this.api
+            .getData()
+            .then(data => {
+                this.fieldsFromJSON = data
+            })
+            .finally(() => (this.showLoader = false))
     }
 
     #nextStep = () => this.step++
@@ -182,17 +185,19 @@ export class MultiStepForm extends LitElement {
     render() {
         loadDefaultFeedbackMessages()
 
-        return html`
-            <form @submit=${this.#onSubmit} class="form">
-                ${this.#renderFormSteps()}
-                <div class="buttons">${this.#renderButton()}</div>
-            </form>
-            <div>${this.#renderValidationResult()}</div>
-            <status-box
-                .status=${this.formSendStatus.status}
-                .message=${this.formSendStatus.message}
-            ></status-box>
-        `
+        return this.showLoader
+            ? html`<form-loader></form-loader>`
+            : html`
+                  <form @submit=${this.#onSubmit} class="form">
+                      ${this.#renderFormSteps()}
+                      <div class="buttons">${this.#renderButton()}</div>
+                  </form>
+                  <div>${this.#renderValidationResult()}</div>
+                  <status-box
+                      .status=${this.formSendStatus.status}
+                      .message=${this.formSendStatus.message}
+                  ></status-box>
+              `
     }
 }
 

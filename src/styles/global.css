@@ -4,4 +4,5 @@ body {
     display: grid;
     place-content: center;
     color: hsl(0, 0%, 40%);
+    min-height: 450px;
 }
