@@ -23,7 +23,6 @@ export class MultiStepForm extends LitElement {
         localize.locale = language.en
         this.api = new SimpleFormAPI()
         this.step = 0
-        // this.fieldsFromJSON = []
         this.validationResult = []
         this.formSendStatus = {
             status: '',
