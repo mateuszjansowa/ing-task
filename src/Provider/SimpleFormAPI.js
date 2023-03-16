@@ -1,4 +1,4 @@
-export class API {
+export class SimpleFormAPI {
     #serverUrl = 'http://localhost:3000'
 
     async getData() {

@@ -1,5 +1,5 @@
 import {html, LitElement} from '@lion/core'
-import {API} from '../../API'
+import {SimpleFormAPI} from '../../Provider/SimpleFormAPI'
 import '@lion/ui/define/lion-button.js'
 import '@lion/ui/define/lion-button-submit.js'
 import {localize} from '@lion/ui/localize.js'
@@ -21,7 +21,7 @@ export class MultiStepForm extends LitElement {
     constructor() {
         super()
         localize.locale = language.en
-        this.api = new API()
+        this.api = new SimpleFormAPI()
         this.step = 0
         this.fieldsFromJSON = []
         this.validationResult = []
