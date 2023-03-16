@@ -25,6 +25,7 @@
         "@lion/button": "^0.18.1",
         "@lion/input": "^0.18.0",
         "@lion/ui": "^0.1.5",
+        "@lit-labs/task": "^2.0.0",
         "@webcomponents/scoped-custom-element-registry": "^0.0.8",
         "json-server": "^0.17.2",
         "lit": "^2.2.4",
