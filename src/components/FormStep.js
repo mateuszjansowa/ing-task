@@ -62,7 +62,6 @@ export default class FormStep extends LitElement {
                                 label=${field.label}
                                 .validators="${field.validators}"
                                 @model-value-changed=${this.#onChange}
-                                ?hidden=${isHidden(field, this.state)}
                             >
                                 <select slot="input">
                                     <option value select hidden>Select an option</option>
@@ -79,7 +78,6 @@ export default class FormStep extends LitElement {
                                 label=${field.label}
                                 .validators="${field.validators}"
                                 @model-value-changed=${this.#onChange}
-                                ?hidden=${isHidden(field, this.state)}
                             >
                             </lion-input-amount>`
                         }
