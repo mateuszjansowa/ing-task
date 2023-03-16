@@ -38,59 +38,62 @@ export default class FormStep extends LitElement {
         throw new Error('No lion-form found in shadowRoot')
     }
 
+    #getField = field => {
+        const availableFields = {
+            text: html`<lion-input
+                class="form__field"
+                name=${field.id}
+                label=${field.label}
+                .validators="${field.validators}"
+                @model-value-changed=${this.#onChange}
+            ></lion-input>`,
+
+            select: html`<lion-select
+                class="form__field"
+                name=${field.id}
+                label=${field.label}
+                .validators="${field.validators}"
+                @model-value-changed=${this.#onChange}
+            >
+                <select slot="input">
+                    <option value select hidden>Select an option</option>
+                    ${field.dataset &&
+                    field.dataset.map(option => {
+                        return html`<option .value=${option}>${option}</option>`
+                    })}
+                </select>
+            </lion-select>`,
+
+            number: html`<lion-input-amount
+                class="form__field form__field--amount"
+                name=${field.id}
+                label=${field.label}
+                .validators="${field.validators}"
+                @model-value-changed=${this.#onChange}
+            >
+            </lion-input-amount>`,
+        }
+
+        if (!(field.type in availableFields)) {
+            throw new Error(`Field type ${field.type} is not supported`)
+        }
+
+        return availableFields[field.type]
+    }
+
     render() {
         const isCurrentStep = this.field.order - 1 === this.step
 
         return html`<div ?hidden=${!isCurrentStep}>
+            <header class="form__header">
+                <h1 class="form__title">${toTitleCase(this.field.name)}</h1>
+                <h5 class="form__subtitle">Fill out the form to register your account</h5>
+            </header>
             <lion-form>
-                <div class="form__header">
-                    <h1 class="form__title">${toTitleCase(this.field.name)}</h1>
-                    <h5 class="form__subtitle">Fill out the form to register your account</h5>
-                </div>
                 <form class="form__fields">
-                    ${this.form.map(field => {
-                        if (isHidden(field, this.state)) {
-                            return
-                        }
-
-                        if (['text'].includes(field.type)) {
-                            return html`<lion-input
-                                class="form__field"
-                                name=${field.id}
-                                label=${field.label}
-                                .validators="${field.validators}"
-                                @model-value-changed=${this.#onChange}
-                            ></lion-input>`
-                        }
-
-                        if (['select'].includes(field.type)) {
-                            return html`<lion-select
-                                class="form__field"
-                                name=${field.id}
-                                label=${field.label}
-                                .validators="${field.validators}"
-                                @model-value-changed=${this.#onChange}
-                            >
-                                <select slot="input">
-                                    <option value select hidden>Select an option</option>
-                                    ${field.dataset.map(option => {
-                                        return html`<option .value=${option}>${option}</option>`
-                                    })}
-                                </select>
-                            </lion-select>`
-                        }
-
-                        if (['number'].includes(field.type)) {
-                            return html`<lion-input-amount
-                                class="form__field form__field--amount"
-                                name=${field.id}
-                                label=${field.label}
-                                .validators="${field.validators}"
-                                @model-value-changed=${this.#onChange}
-                            >
-                            </lion-input-amount>`
-                        }
-                    })}
+                    ${this.form.map(field =>
+                        !isHidden(field, this.state) ? this.#getField(field) : null
+                    )}
                 </form>
             </lion-form>
         </div>`
