@@ -162,10 +162,7 @@ export class MultiStepForm extends LitElement {
                       <div class="buttons">${this.#renderButton()}</div>
                   </form>
                   <div>${this.#renderValidationResult()}</div>
-                  <status-box
-                      .status=${this.formSendStatus.status}
-                      .message=${this.formSendStatus.message}
-                  ></status-box>
+                  <status-box .formSendStatus=${this.formSendStatus}></status-box>
               `
     }
 }

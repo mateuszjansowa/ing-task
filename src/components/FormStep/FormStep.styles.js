@@ -13,14 +13,13 @@ export default css`
 
     .form__title {
         font-weight: 400;
-        color: hsl(0, 0%, 0%);
         margin: 10px;
         padding: 0;
-        text-transform: uppercase;
     }
 
     .form__subtitle {
         margin: 5px;
+        font-weight: 300;
         padding: 0;
     }
 
@@ -31,7 +30,7 @@ export default css`
         box-shadow: 0px 1px 2px -1px hsl(0, 0%, 49%);
         display: flex;
         flex-direction: column;
-        row-gap: 40px;
+        row-gap: 50px;
     }
 
     .form__field {

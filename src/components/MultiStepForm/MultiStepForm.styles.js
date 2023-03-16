@@ -13,7 +13,7 @@ export default css`
         display: flex;
         justify-content: flex-end;
         column-gap: 20px;
-        margin-top: 20px;
+        margin: 20px 0;
     }
 
     .button {

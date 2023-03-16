@@ -1,5 +1,6 @@
 import {LitElement, html} from '@lion/core'
 import {formConverter, isHidden} from '../../helpers'
+import {toTitleCase} from '../../helpers/utils'
 import '@lion/ui/define/lion-input.js'
 import '@lion/ui/define/lion-select.js'
 import '@lion/ui/define/lion-form.js'
@@ -43,7 +44,7 @@ export default class FormStep extends LitElement {
         return html`<div ?hidden=${!isCurrentStep}>
             <lion-form>
                 <div class="form__header">
-                    <h1 class="form__title">${this.field.name}</h1>
+                    <h1 class="form__title">${toTitleCase(this.field.name)}</h1>
                     <h5 class="form__subtitle">Fill out the form to register your account</h5>
                 </div>
                 <form class="form__fields">

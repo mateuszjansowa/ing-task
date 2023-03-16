@@ -21,4 +21,7 @@ export const colors = {
     secondary: css`hsl(0, 0%, 80%)`,
     font: css`hsl(0, 0%, 40%)`,
     danger: css`hsl(0, 100%, 50%)`,
+    success: css`hsl(120, 24%, 41%)`,
+    successLight: css`hsl(120, 100%, 96%)`,
+    errorLight: css`hsl(35, 100%, 95%)`,
 }
