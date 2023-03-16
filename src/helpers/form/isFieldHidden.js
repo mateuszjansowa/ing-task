@@ -1,4 +1,4 @@
-export const isHidden = (field = {}, state = {}) => {
+export const isFieldHidden = (field = {}, state = {}) => {
     if (!field.visibility) {
         return false
     }

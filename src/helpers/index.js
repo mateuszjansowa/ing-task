@@ -1,4 +1,4 @@
 import {prepareForm} from './form/prepareForm'
-import {isHidden} from './form/isHidden'
+import {isFieldHidden} from './form/isFieldHidden'
 
-export {prepareForm, isHidden}
+export {prepareForm, isFieldHidden}

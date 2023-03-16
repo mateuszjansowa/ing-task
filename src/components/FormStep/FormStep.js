@@ -1,5 +1,5 @@
 import {LitElement, html} from '@lion/core'
-import {prepareForm, isHidden} from '../../helpers'
+import {prepareForm, isFieldHidden} from '../../helpers'
 import {toTitleCase} from '../../helpers/utils'
 import '@lion/ui/define/lion-input.js'
 import '@lion/ui/define/lion-select.js'
@@ -92,7 +92,7 @@ export default class FormStep extends LitElement {
             <lion-form>
                 <form class="form__fields">
                     ${this.form.map(field =>
-                        !isHidden(field, this.state) ? this.#getField(field) : null
+                        !isFieldHidden(field, this.state) ? this.#getField(field) : null
                     )}
                 </form>
             </lion-form>
