@@ -6,7 +6,6 @@ export class StatusBox extends LitElement {
         message: {type: String},
     }
 
-
     render() {
         return html`
             <div class=${this.status}>
