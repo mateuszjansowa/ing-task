@@ -1,4 +1,5 @@
 import {html, LitElement} from '@lion/core'
+import {Task} from '@lit-labs/task'
 import {SimpleFormAPI} from '../../Provider/SimpleFormAPI'
 import '@lion/ui/define/lion-button.js'
 import '@lion/ui/define/lion-button-submit.js'
@@ -15,7 +16,6 @@ export class MultiStepForm extends LitElement {
         fieldsFromJSON: {type: Array, state: true},
         validationResult: {type: Array, state: true},
         formSendStatus: {type: Object},
-        showLoader: {type: Boolean},
     }
 
     constructor() {
@@ -23,23 +23,16 @@ export class MultiStepForm extends LitElement {
         localize.locale = language.en
         this.api = new SimpleFormAPI()
         this.step = 0
-        this.fieldsFromJSON = []
+        // this.fieldsFromJSON = []
         this.validationResult = []
         this.formSendStatus = {
             status: '',
             message: '',
         }
-        this.showLoader = true
     }
 
     connectedCallback() {
         super.connectedCallback()
-        this.api
-            .getData()
-            .then(data => {
-                this.fieldsFromJSON = data
-            })
-            .finally(() => (this.showLoader = false))
     }
 
     #nextStep = () => this.step++
@@ -127,27 +120,32 @@ export class MultiStepForm extends LitElement {
         this.#sendDataToServer(formState)
     }
 
-    #renderFormSteps = () =>
-        this.fieldsFromJSON.map(
-            field => html` <form-step .field=${field} .step=${this.step}></form-step>`
-        )
+    #renderFormSteps = fields =>
+        fields.map(field => html`<form-step .field=${field} .step=${this.step}></form-step>`)
+
+    #getFormTask = new Task(
+        this,
+        async () => this.api.getData(),
+        () => []
+    )
 
     render() {
         loadDefaultFeedbackMessages()
 
-        return this.showLoader
-            ? html`<form-loader></form-loader>`
-            : html`
-                  <form @submit=${this.#onSubmit} class="form">
-                      ${this.#renderFormSteps()}
-                      <div class="buttons">${this.#renderButton()}</div>
-                  </form>
+        return html` ${this.#getFormTask.render({
+            initial: () => html`<form-loader></form-loader>`,
+            pending: () => html`<form-loader></form-loader>`,
+            complete: fieldsFromJSON =>
+                html`<form @submit=${this.#onSubmit} class="form">
+                        ${this.#renderFormSteps(fieldsFromJSON)}
+                        <div class="buttons">${this.#renderButton()}</div>
+                    </form>
 
-                  <form-validation-result
-                      .results=${this.validationResult}
-                  ></form-validation-result>
-                  <status-box .formSendStatus=${this.formSendStatus}></status-box>
-              `
+                    <form-validation-result
+                        .results=${this.validationResult}
+                    ></form-validation-result>
+                    <status-box .formSendStatus=${this.formSendStatus}></status-box>`,
+        })}`
     }
 }
 
