@@ -3,7 +3,7 @@ import styles from './FormLoader.styles'
 
 export class FormLoader extends LitElement {
     static properties = {
-        size: {type: String},
+        size: {type: String, attribute: true},
     }
 
     static styles = styles
