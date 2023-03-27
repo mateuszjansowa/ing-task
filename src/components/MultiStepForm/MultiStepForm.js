@@ -1,5 +1,6 @@
 import {html, LitElement} from '@lion/core'
 import {Task} from '@lit-labs/task'
+import {choose} from 'lit/directives/choose.js'
 import {SimpleFormAPI} from '../../Provider/SimpleFormAPI'
 import '@lion/ui/define/lion-button.js'
 import '@lion/ui/define/lion-button-submit.js'
@@ -33,25 +34,6 @@ export class MultiStepForm extends LitElement {
     #nextStep = () => this.step++
 
     #previousStep = () => this.step--
-
-    #renderButton = () => {
-        const buttons = {
-            0: html`<lion-button class="button" @click=${this.#nextStep}> Next </lion-button>`,
-            1: html`<lion-button class="button button__prev" @click=${this.#previousStep}>
-                    Previous
-                </lion-button>
-                <lion-button-submit
-                    class="button"
-                    ?disabled=${this.formSendStatus.status === serverState.success.status}
-                >
-                    Submit
-                </lion-button-submit>`,
-        }
-
-        if (Object.hasOwn(buttons, this.step)) {
-            return buttons[this.step]
-        }
-    }
 
     #getElementsWithError = elements => elements.filter(el => el.hasFeedbackFor.includes('error'))
 
@@ -133,7 +115,40 @@ export class MultiStepForm extends LitElement {
             complete: fieldsFromJSON =>
                 html`<form @submit=${this.#onSubmit} class="form">
                         ${this.#renderFormSteps(fieldsFromJSON)}
-                        <div class="buttons">${this.#renderButton()}</div>
+                        <div class="buttons">
+                            ${choose(
+                                this.step,
+                                [
+                                    [
+                                        0,
+                                        () =>
+                                            html`<lion-button
+                                                class="button"
+                                                @click=${this.#nextStep}
+                                            >
+                                                Next
+                                            </lion-button>`,
+                                    ],
+                                    [
+                                        1,
+                                        () => html`<lion-button
+                                                class="button button__prev"
+                                                @click=${this.#previousStep}
+                                            >
+                                                Previous
+                                            </lion-button>
+                                            <lion-button-submit
+                                                class="button"
+                                                ?disabled=${this.formSendStatus.status ===
+                                                serverState.success.status}
+                                            >
+                                                Submit
+                                            </lion-button-submit>`,
+                                    ],
+                                ],
+                                () => html``
+                            )}
+                        </div>
                     </form>
 
                     <form-validation-result
