@@ -12,10 +12,10 @@ import styles from './MultiStepForm.styles'
 export class MultiStepForm extends LitElement {
     static styles = styles
     static properties = {
-        step: {type: Number},
-        fieldsFromJSON: {type: Array, state: true},
-        validationResult: {type: Array, state: true},
-        formSendStatus: {type: Object},
+        step: {type: Number, state: true, attribute: false},
+        fieldsFromJSON: {type: Array, state: true, attribute: false},
+        validationResult: {type: Array, state: true, attribute: false},
+        formSendStatus: {type: Object, state: true, attribute: false},
     }
 
     constructor() {
