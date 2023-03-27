@@ -8,6 +8,7 @@ import {localize} from '@lion/ui/localize.js'
 import {language} from '../../constants'
 import {loadDefaultFeedbackMessages} from '@lion/ui/validate-messages.js'
 import {serverState} from '../../constants'
+import {getErrors} from '../../helpers/form/getErrors'
 import styles from './MultiStepForm.styles'
 
 export class MultiStepForm extends LitElement {
@@ -35,10 +36,8 @@ export class MultiStepForm extends LitElement {
 
     #previousStep = () => this.step--
 
-    #getElementsWithError = elements => elements.filter(el => el.hasFeedbackFor.includes('error'))
-
     #validateFormStep = (formStep, index) => {
-        const elementsWithError = this.#getElementsWithError(formStep.lionForm.formElements)
+        const elementsWithError = getErrors(formStep.lionForm.formElements)
 
         if (!elementsWithError.length) {
             return
