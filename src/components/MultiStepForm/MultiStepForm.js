@@ -30,10 +30,6 @@ export class MultiStepForm extends LitElement {
         }
     }
 
-    connectedCallback() {
-        super.connectedCallback()
-    }
-
     #nextStep = () => this.step++
 
     #previousStep = () => this.step--
