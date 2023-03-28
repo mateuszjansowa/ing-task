@@ -1,5 +1,5 @@
 import {html, LitElement} from '@lion/core'
-import {Task} from '@lit-labs/task'
+import {choose} from 'lit/directives/choose.js'
 import {SimpleFormAPI} from '../../Provider/SimpleFormAPI'
 import '@lion/ui/define/lion-button.js'
 import '@lion/ui/define/lion-button-submit.js'
@@ -7,15 +7,19 @@ import {localize} from '@lion/ui/localize.js'
 import {language} from '../../constants'
 import {loadDefaultFeedbackMessages} from '@lion/ui/validate-messages.js'
 import {serverState} from '../../constants'
+import {getErrors} from '../../helpers/form/getErrors'
+import {MultiStepFormController} from './MulstiStepForm.controller'
 import styles from './MultiStepForm.styles'
 
 export class MultiStepForm extends LitElement {
+    multiStepFormController = new MultiStepFormController(this)
+
     static styles = styles
     static properties = {
-        step: {type: Number},
-        fieldsFromJSON: {type: Array, state: true},
-        validationResult: {type: Array, state: true},
-        formSendStatus: {type: Object},
+        step: {type: Number, state: true, attribute: false},
+        fieldsFromJSON: {type: Array, state: true, attribute: false},
+        validationResult: {type: Array, state: true, attribute: false},
+        formSendStatus: {type: Object, state: true, attribute: false},
     }
 
     constructor() {
@@ -30,37 +34,12 @@ export class MultiStepForm extends LitElement {
         }
     }
 
-    connectedCallback() {
-        super.connectedCallback()
-    }
-
     #nextStep = () => this.step++
 
     #previousStep = () => this.step--
 
-    #renderButton = () => {
-        const buttons = {
-            0: html`<lion-button class="button" @click=${this.#nextStep}> Next </lion-button>`,
-            1: html`<lion-button class="button button__prev" @click=${this.#previousStep}>
-                    Previous
-                </lion-button>
-                <lion-button-submit
-                    class="button"
-                    ?disabled=${this.formSendStatus.status === serverState.success.status}
-                >
-                    Submit
-                </lion-button-submit>`,
-        }
-
-        if (Object.hasOwn(buttons, this.step)) {
-            return buttons[this.step]
-        }
-    }
-
-    #getElementsWithError = elements => elements.filter(el => el.hasFeedbackFor.includes('error'))
-
     #validateFormStep = (formStep, index) => {
-        const elementsWithError = this.#getElementsWithError(formStep.lionForm.formElements)
+        const elementsWithError = getErrors(formStep.lionForm.formElements)
 
         if (!elementsWithError.length) {
             return
@@ -122,22 +101,46 @@ export class MultiStepForm extends LitElement {
     #renderFormSteps = fields =>
         fields.map(field => html`<form-step .field=${field} .step=${this.step}></form-step>`)
 
-    #getFormTask = new Task(
-        this,
-        async () => this.api.getData(),
-        () => []
-    )
+    #renderFormButtons = () =>
+        choose(
+            this.step,
+            [
+                [
+                    0,
+                    () =>
+                        html`<lion-button class="button" @click=${this.#nextStep}>
+                            Next
+                        </lion-button>`,
+                ],
+                [
+                    1,
+                    () => html`<lion-button
+                            class="button button__prev"
+                            @click=${this.#previousStep}
+                        >
+                            Previous
+                        </lion-button>
+                        <lion-button-submit
+                            class="button"
+                            ?disabled=${this.formSendStatus.status === serverState.success.status}
+                        >
+                            Submit
+                        </lion-button-submit>`,
+                ],
+            ],
+            () => html``
+        )
 
     render() {
         loadDefaultFeedbackMessages()
 
-        return html` ${this.#getFormTask.render({
+        return html` ${this.multiStepFormController.render({
             initial: () => html`<form-loader></form-loader>`,
             pending: () => html`<form-loader></form-loader>`,
             complete: fieldsFromJSON =>
                 html`<form @submit=${this.#onSubmit} class="form">
                         ${this.#renderFormSteps(fieldsFromJSON)}
-                        <div class="buttons">${this.#renderButton()}</div>
+                        <div class="buttons">${this.#renderFormButtons()}</div>
                     </form>
 
                     <form-validation-result

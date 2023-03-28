@@ -6,7 +6,7 @@ import '@lion/ui/define/lion-button.js'
 export class FormValidationResult extends LitElement {
     static styles = styles
     static properties = {
-        results: {type: Array},
+        results: {type: Array, attribute: false},
     }
 
     render() {

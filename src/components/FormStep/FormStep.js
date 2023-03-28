@@ -10,9 +10,9 @@ import styles from './FormStep.styles'
 export default class FormStep extends LitElement {
     static styles = styles
     static properties = {
-        form: {type: Array},
-        step: {type: Number},
-        state: {type: Object, state: true},
+        form: {type: Array, state: true, attribute: false},
+        step: {type: Number, state: true, attribute: false},
+        state: {type: Object, state: true, attribute: false},
     }
 
     constructor() {
