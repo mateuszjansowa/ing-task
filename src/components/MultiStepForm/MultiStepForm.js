@@ -1,5 +1,4 @@
 import {html, LitElement} from '@lion/core'
-import {Task} from '@lit-labs/task'
 import {choose} from 'lit/directives/choose.js'
 import {SimpleFormAPI} from '../../Provider/SimpleFormAPI'
 import '@lion/ui/define/lion-button.js'
@@ -9,9 +8,12 @@ import {language} from '../../constants'
 import {loadDefaultFeedbackMessages} from '@lion/ui/validate-messages.js'
 import {serverState} from '../../constants'
 import {getErrors} from '../../helpers/form/getErrors'
+import {MultiStepFormController} from './MulstiStepForm.controller'
 import styles from './MultiStepForm.styles'
 
 export class MultiStepForm extends LitElement {
+    multiStepFormController = new MultiStepFormController(this)
+
     static styles = styles
     static properties = {
         step: {type: Number, state: true, attribute: false},
@@ -129,16 +131,10 @@ export class MultiStepForm extends LitElement {
             () => html``
         )
 
-    #getFormTask = new Task(
-        this,
-        async () => this.api.getData(),
-        () => []
-    )
-
     render() {
         loadDefaultFeedbackMessages()
 
-        return html` ${this.#getFormTask.render({
+        return html` ${this.multiStepFormController.render({
             initial: () => html`<form-loader></form-loader>`,
             pending: () => html`<form-loader></form-loader>`,
             complete: fieldsFromJSON =>
